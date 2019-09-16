@@ -42,11 +42,11 @@ export function activate(context: vscode.ExtensionContext) {
       accept = true;
       input.hide();
     });
-    input.onDidHide(() => {
+    input.onDidHide(async () => {
       if (accept) return;
 
       // Set back to original text if user didn't accept
-      resetOriginalText();
+      await resetOriginalText();
     });
     input.onDidChangeValue(async str => {
       await resetOriginalText();

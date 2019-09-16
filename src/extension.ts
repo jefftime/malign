@@ -105,8 +105,8 @@ export function activate(context: vscode.ExtensionContext) {
           splitLengths.fill(0);
           splitLines.forEach(line => {
             // Make sure this is a line that requires alignment
-            if (line.splits.length <= 1) return;
-            for (let i = 0; i < line.splits.length; ++i) {
+            if (line.splits.length < nSections) return;
+            for (let i = 0; i < nSections; ++i) {
               splitLengths[i] = line.splits[i].length > splitLengths[i]
                               ? line.splits[i].length
                               : splitLengths[i];
@@ -115,6 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
 
           // Align the line splits
           splitLines.forEach(line => {
+            if (!line.matches) return;
             // Don't pad the final split
             for (let i = 0; i < splitLengths.length - 1; ++i) {
               line.splits[i] = line.splits[i].padEnd(splitLengths[i], ' ');

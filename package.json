@@ -2,6 +2,11 @@
   "name": "malign",
   "displayName": "Malign",
   "description": "Easy alignment extension",
+  "publisher": "Jefftime",
+  "repository": {
+    "url": "https://github.com/jefftime/malign",
+    "type": "git"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.38.0"

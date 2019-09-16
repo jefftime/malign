@@ -60,18 +60,17 @@ export function activate(context: vscode.ExtensionContext) {
           if (lines.length === 0) return;
 
           interface LineSplit {
-            index: number;
+            indent: number;
             matches: boolean;
             splits: string[]
           };
 
           // Split lines on user input
           let splitLines: LineSplit[] = [];
-          let index = 0;
           lines.forEach(line => {
-            let rgx = new RegExp(`\(${input.value}\)`);
+            let rgx = new RegExp(`(${input.value})`);
             splitLines.push({
-              index: index++,
+              indent: line.length - line.trimLeft().length,
               matches: line.match(rgx) !== null,
               splits: line.split(rgx)
             });
@@ -88,16 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
                         : nSections;
             }
 
-            // WARNING: Malign assumes that if we get to this point,
-            // `split.splits.length` will be greater than 1. This needs to be
-            // verified and tested
-            //
-            // Trim the splits for processing later on. Start by right trimming
-            // first value then regular trimming the rest
-            line.splits[0] = line.splits[0].trimRight();
-            for (let i = 1; i < line.splits.length; ++i) {
-              line.splits[i] = line.splits[i].trim();
-            }
+            line.splits = line.splits.map(split => split.trim());
           });
 
           // Get maximum split lengths
@@ -122,7 +112,15 @@ export function activate(context: vscode.ExtensionContext) {
             }
           });
           let newLines = splitLines
-            .map(line => line.splits.join(' '))
+            .map(line => {
+              if (!line.matches) {
+                return ''.padStart(line.indent).concat(line.splits.join(''));
+              } else {
+                return ''.padStart(line.indent).concat(
+                  line.splits.filter(split => split.length > 0).join(' ')
+                );
+              }
+            })
             .join('\n');
 
           eb.replace(sel, newLines);

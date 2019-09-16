@@ -96,7 +96,7 @@ export function activate(context: vscode.ExtensionContext) {
             // first value then regular trimming the rest
             line.splits[0] = line.splits[0].trimRight();
             for (let i = 1; i < line.splits.length; ++i) {
-              line.splits[i].trim();
+              line.splits[i] = line.splits[i].trim();
             }
           });
 
@@ -115,7 +115,8 @@ export function activate(context: vscode.ExtensionContext) {
 
           // Align the line splits
           splitLines.forEach(line => {
-            for (let i = 0; i < splitLengths.length; ++i) {
+            // Don't pad the final split
+            for (let i = 0; i < splitLengths.length - 1; ++i) {
               line.splits[i] = line.splits[i].padEnd(splitLengths[i], ' ');
             }
           });

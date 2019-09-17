@@ -117,7 +117,10 @@ export function activate(context: vscode.ExtensionContext) {
                 return ''.padStart(line.indent).concat(line.splits.join(''));
               } else {
                 return ''.padStart(line.indent).concat(
-                  line.splits.filter(split => split.length > 0).join(' ')
+                  line.splits
+                    .filter(split => split.length > 0)
+                    .join(' ')
+                    .trimRight()
                 );
               }
             })

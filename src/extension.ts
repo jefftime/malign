@@ -76,17 +76,32 @@ export function activate(context: vscode.ExtensionContext) {
             });
           });
 
+          // Get the minimum indent where the first split of the regex is not
+          // empty. This means that if the line starts off with a regex match,
+          // we want to align it to something that doesn't because the latter
+          // is indentation-sensitive
+          const minIndent = Math.min.apply(
+            Number.MAX_SAFE_INTEGER,
+            splitLines
+              .map(line => {
+                return {
+                  indent: line.indent,
+                  exclude: line.splits[0].length === 0 || !line.matches
+                }
+              })
+              .filter(line => !line.exclude)
+              .map(linePair => linePair.indent)
+          );
+
           // Malign will align against line with smallest splits, so get the
           // minimum number of split sections
           let nSections = Number.MAX_SAFE_INTEGER;
           splitLines.forEach(line => {
             // Get minimum number of nSections
-            if (line.matches) {
-              nSections = line.splits.length < nSections
-                        ? line.splits.length
-                        : nSections;
-            }
-
+            if (!line.matches) return line.splits;
+            nSections = line.splits.length < nSections
+                      ? line.splits.length
+                      : nSections;
             line.splits = line.splits.map(split => split.trim());
           });
 
@@ -114,9 +129,10 @@ export function activate(context: vscode.ExtensionContext) {
           let newLines = splitLines
             .map(line => {
               if (!line.matches) {
-                return ''.padStart(line.indent).concat(line.splits.join(''));
+                // Return the original line
+                return line.splits.join('');
               } else {
-                return ''.padStart(line.indent).concat(
+                return ''.padStart(minIndent).concat(
                   line.splits
                     .filter(split => split.length > 0)
                     .join(' ')

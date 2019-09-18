@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.0
+
+- Fix indentation resetting when match occurred at beginning of line
+
+---
+
 ## 0.2.1
 
 - Remade malign_simple.gif for README

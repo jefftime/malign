@@ -18,10 +18,6 @@ Install the extension, select some text, and choose `Malign` from the command wi
 
 ## Release Notes
 
-## 0.2.1
+## 0.3.0
 
-- Remade malign_simple.gif for README
-
-## 0.2.0
-
-- Fix alignment issue when match happened on ends of a line
+- Fix indentation resetting when match occurred at beginning of line

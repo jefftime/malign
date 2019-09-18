@@ -7,7 +7,7 @@
     "url": "https://github.com/jefftime/malign",
     "type": "git"
   },
-  "version": "0.2.1",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.38.0"
   },
